@@ -48,12 +48,10 @@ object Day_17 extends App with Solver {
 
     def nextRound(): Space = Space(
       activeCubes
-        .flatMap(coord => coord.neighbours().toSet + coord)
-        .map(coord =>
+        .flatMap(coord => coord.neighbours().toSet + coord).flatMap(coord =>
           if (activeCubes.contains(coord)) calculateActive(coord)
           else calculateInActive(coord)
-        ).filter(_.isDefined)
-        .map(_.get)
+      )
     )
   }
 
@@ -84,9 +82,7 @@ object Day_17 extends App with Solver {
           if (ch == '#') Some(cubeCreator(x, y))
           else None
         }
-      }.filter(_.isDefined)
-        .map(_.get)
-        .toSet
+      }.flatten.toSet
     )
   }
 
