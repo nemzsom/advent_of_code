@@ -10,7 +10,7 @@ object Day_19 extends App with Solver {
 
   def solveByGeneratingAVeryBigRegex(i: List[String], part2: Boolean = false) = {
     val input = Input(i)
-    val (pattern, _) = input.rules(0).resolvePattern(input.rules, part2)
+    val pattern = input.rules(0).resolvePattern(input.rules, part2)
     input.messages.count(pattern.r.matches).toString
   }
 
@@ -29,26 +29,26 @@ object Day_19 extends App with Solver {
     }
   }
 
-  case class Rule(id: Int, spec: String, pattern: Option[String] = None) {
-    def resolvePattern(rules: Map[Int, Rule], part2: Boolean = false): (String, Map[Int, Rule]) =
-      pattern.map(p => (p, rules))
-        .getOrElse {
-          val (p, updateRules) = spec.split(' ').foldLeft(("", rules)) {
-            case ((acc, r), ch) if ch.contains("\"") => (acc + ch.tail.head, r)
-            case ((acc, r), "|") => (acc + "|", r)
-            case ((acc, r), x) =>
-              val (pattern, updatedRules) = r(x.toInt).resolvePattern(rules, part2)
-              if (part2 && id == 11) (acc + pattern + "{X}", updatedRules)
-              else (acc + pattern, updatedRules)
-          }
-          val res =
-            if (part2 && id == 8) p + "+"
-            else if (part2 && id == 11)
-              '(' + Range(1, 10).map(repeat => p.replaceAll("X", repeat.toString)).mkString("|") + ')'
-            else if (spec.contains("|")) '(' + p + ')'
-            else p
-          (res, updateRules.updated(id, this.copy(pattern = Some(res))))
-        }
+  case class Rule(id: Int, spec: String) {
+
+    def resolvePattern(rules: Map[Int, Rule], part2: Boolean = false): String = {
+      val p = spec.split(' ').foldLeft("") {
+        case (acc, ch) if ch.contains("\"") => acc + ch.tail.head
+        case (acc, "|") => acc + "|"
+        case (acc, x) =>
+          val pattern = rules(x.toInt).resolvePattern(rules, part2)
+          if (part2 && id == 11) acc + pattern + "{X}"
+          else acc + pattern
+      }
+      val res =
+        if (part2 && id == 8) p + "+"
+        else if (part2 && id == 11)
+          '(' + Range(1, 10).map(repeat => p.replaceAll("X", repeat.toString)).mkString("|") + ')'
+        else if (spec.contains("|")) '(' + p + ')'
+        else p
+      res
+    }
+
   }
 
   solve()
