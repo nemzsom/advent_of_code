@@ -8,6 +8,8 @@ import scala.util.Try
 
 trait Solver {
 
+  val newLine: String = System.lineSeparator()
+
   def solve(input: List[String]): String
   def solveSecondPart(input: List[String]): String
 
