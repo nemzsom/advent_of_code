@@ -14,27 +14,21 @@ trait Solver {
   def solveSecondPart(input: List[String]): String
 
   def solve(): Unit = {
-    val start1 = System.nanoTime()
-    val first = Try(solve(getInput))
-    first.foreach(res => {
-      val duration = Duration.of(System.nanoTime() - start1, ChronoUnit.NANOS)
-      println(s"Result first part ($duration):")
+    solve("Part 1", solve)
+    solve("Part 2", solveSecondPart)
+  }
+
+  private def solve(desc: String, solver: List[String] => String): Unit = {
+    val start = System.nanoTime()
+    val result = Try(solver(getInput))
+    result.foreach(res => {
+      val duration = Duration.of(System.nanoTime() - start, ChronoUnit.NANOS)
+      println(s"$desc ($duration):")
       println(res)
     })
-    first.failed.foreach(th => {
-      println(s"Part 1 failed: ${th.getMessage}")
-      th.printStackTrace()
-    })
-    val start2 = System.nanoTime()
-    val second = Try(solveSecondPart(getInput))
-    second.foreach(res => {
-      val duration = Duration.of(System.nanoTime() - start2, ChronoUnit.NANOS)
-      println(s"Result second part ($duration):")
-      println(res)
-    })
-    second.failed.foreach(th => {
-      println(s"Part 2 failed: ${th.getMessage}")
-      th.printStackTrace()
+    result.failed.foreach(th => {
+      println(s"$desc failed: ${th.getMessage}")
+      if (!th.isInstanceOf[NotImplementedError]) th.printStackTrace()
     })
   }
 
