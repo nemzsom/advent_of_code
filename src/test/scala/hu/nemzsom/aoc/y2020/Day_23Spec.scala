@@ -10,5 +10,5 @@ class Day_23Spec extends Tester {
 
   override val expectedResult: String = "67384529"
 
-  override def expectedResultPart2: String = ???
+  override def expectedResultPart2: String = "149245887792"
 }
