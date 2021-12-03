@@ -10,15 +10,15 @@ trait Solver {
 
   val newLine: String = System.lineSeparator()
 
-  def solve(input: List[String]): String
-  def solveSecondPart(input: List[String]): String
+  def solve(input: List[String]): Any
+  def solveSecondPart(input: List[String]): Any
 
   def solve(): Unit = {
     solve("Part 1", solve)
     solve("Part 2", solveSecondPart)
   }
 
-  private def solve(desc: String, solver: List[String] => String): Unit = {
+  private def solve(desc: String, solver: List[String] => Any): Unit = {
     val start = System.nanoTime()
     val result = Try(solver(getInput))
     result.foreach(res => {

@@ -15,15 +15,15 @@ abstract class Tester extends AnyFlatSpec {
 
   "The solution for part1" should "match the example" in {
     if (Try(expectedResult).isSuccess)
-      assert(solver.solve(asLines(input)) === expectedResult)
+      assert(solver.solve(asLines(input)).toString === expectedResult)
   }
 
   "The solution for part2" should "match the example" in {
     if (Try(expectedResultPart2).isSuccess)
-      assert(solver.solveSecondPart(asLines(input2)) === expectedResultPart2)
+      assert(solver.solveSecondPart(asLines(input2)).toString === expectedResultPart2)
   }
 
-  def asLines(str: String) = {
+  def asLines(str: String): List[String] = {
     Source.fromString(str).getLines().toList
   }
 
