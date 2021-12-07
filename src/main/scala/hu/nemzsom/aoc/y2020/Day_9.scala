@@ -2,21 +2,22 @@ package hu.nemzsom.aoc.y2020
 
 import hu.nemzsom.aoc.{LongLines, Solver}
 
+import scala.annotation.tailrec
 import scala.collection.immutable.Queue
 
 object Day_9 extends App with Solver with LongLines {
 
-  override def solveInts(input: List[Long]) = Day_9(25).solveInts(input)
+  override def solveLongs(input: List[Long]) = Day_9(25).solveLongs(input)
 
-  override def solveIntsSecondPart(input: List[Long]) = Day_9(25).solveIntsSecondPart(input)
+  override def solveLongsSecondPart(input: List[Long]) = Day_9(25).solveLongsSecondPart(input)
 
   solve()
 }
 
 case class Day_9(preambleSize: Int) extends Solver with LongLines {
-  override def solveInts(input: List[Long]) = {
+  override def solveLongs(input: List[Long]): Long = {
     val (preamble, list) =  input.splitAt(preambleSize)
-    findFirstValid(Queue(preamble: _*), list).toString
+    findFirstValid(Queue(preamble: _*), list)
   }
 
   def findFirstValid(preamble: Queue[Long], list: List[Long]): Long = list match {
@@ -34,18 +35,20 @@ case class Day_9(preambleSize: Int) extends Solver with LongLines {
     permutations.nonEmpty
   }
 
-  override def solveIntsSecondPart(input: List[Long]) = {
-    val numberToFind = solveInts(input).toLong
+  override def solveLongsSecondPart(input: List[Long]): Long = {
+    val numberToFind = solveLongs(input)
+    @tailrec
     def findSequence(acc: List[Long], list: List[Long]): Long = list match {
       case head :: _ if acc.sum + head == numberToFind => (head :: acc).max + (head :: acc).min
       case head :: tail if acc.sum + head < numberToFind => findSequence(head :: acc, tail)
       case _ => -1
     }
+    @tailrec
     def find(list: List[Long]): Long = {
       val res = findSequence(List(), list)
       if (res == -1) find(list.tail)
       else res
     }
-    find(input).toString
+    find(input)
   }
 }

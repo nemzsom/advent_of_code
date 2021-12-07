@@ -1,12 +1,10 @@
 package hu.nemzsom.aoc.y2021
 
-import hu.nemzsom.aoc.Solver
+import hu.nemzsom.aoc.{OneLineInts, Solver}
 
-import java.lang.Math.max
 import scala.annotation.tailrec
-import scala.util.matching.Regex
 
-object Day_6 extends App with Solver {
+object Day_6 extends App with Solver with OneLineInts {
   
   case class LSchool(fish: Map[Int, Long]) {
 
@@ -33,9 +31,14 @@ object Day_6 extends App with Solver {
         .map(_.toInt)
         .groupBy(timer => timer)
         .view.mapValues(_.length.toLong).toMap)
+
+    def apply(fish: List[Int]): LSchool =
+      LSchool(fish
+        .groupBy(timer => timer)
+        .view.mapValues(_.length.toLong).toMap)
   }
 
-  override def solve(input: List[String]) = LSchool.parse(input.head).simulate(80)
-  override def solveSecondPart(input: List[String]) = LSchool.parse(input.head).simulate(256)
+  override def solveInts(input: List[Int]) = LSchool(input).simulate(80)
+  override def solveIntsSecondPart(input: List[Int]) = LSchool(input).simulate(256)
   solve()
 }

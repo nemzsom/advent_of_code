@@ -1,17 +1,11 @@
 package hu.nemzsom.aoc
 
-trait LongLines {
+trait LongLines extends Parser {
 
-  def solve(input: List[String]): String = {
-      solveInts(input.map(s => s.toLong))
-  }
+  def solve(input: List[String]): Any = solveLongs(parseToLongs(input))
+  def solveSecondPart(input: List[String]): Any = solveLongsSecondPart(parseToLongs(input))
 
-  def solveSecondPart(input: List[String]): String = {
-    solveIntsSecondPart(input.map(s => s.toLong))
-  }
-
-  def solveInts(input: List[Long]): String
-
-  def solveIntsSecondPart(input: List[Long]): String
+  def solveLongs(input: List[Long]): Any
+  def solveLongsSecondPart(input: List[Long]): Any
 
 }

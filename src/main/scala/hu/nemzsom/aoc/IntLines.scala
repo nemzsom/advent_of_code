@@ -1,17 +1,11 @@
 package hu.nemzsom.aoc
 
-trait IntLines {
+trait IntLines extends Parser {
 
-  def solve(input: List[String]): String = {
-      solveInts(input.map(s => s.toInt))
-  }
+  def solve(input: List[String]): Any = solveInts(parseToInts(input))
+  def solveSecondPart(input: List[String]): Any = solveIntsSecondPart(parseToInts(input))
 
-  def solveSecondPart(input: List[String]): String = {
-    solveIntsSecondPart(input.map(s => s.toInt))
-  }
-
-  def solveInts(input: List[Int]): String
-
-  def solveIntsSecondPart(input: List[Int]): String
+  def solveInts(input: List[Int]): Any
+  def solveIntsSecondPart(input: List[Int]): Any
 
 }
