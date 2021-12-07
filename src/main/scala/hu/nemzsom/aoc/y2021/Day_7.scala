@@ -14,14 +14,13 @@ object Day_7 extends App with Solver with OneLineInts {
     Range.inclusive(positions.min, positions.max).map(targetPos => fuelCost(positions, targetPos)(costF)).min
 
   def flatCost(distance: Int): Int = distance
-  def increasingCost(distance: Int): Int = increasingCost(distance, 0)
   @tailrec
-  def increasingCost(distance: Int, totalCost: Int): Int = distance match {
+  def increasingCost(distance: Int, totalCost: Int = 0): Int = distance match {
     case 0 => totalCost
     case _ => increasingCost(distance - 1, totalCost + distance)
   }
 
   override def solveInts(input: List[Int]) = minFuelCost(input)(flatCost)
-  override def solveIntsSecondPart(input: List[Int]) = minFuelCost(input)(increasingCost)
+  override def solveIntsSecondPart(input: List[Int]) = minFuelCost(input)(distance => increasingCost(distance))
   solve()
 }
