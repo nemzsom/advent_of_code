@@ -2,35 +2,28 @@ package hu.nemzsom.aoc.y2021
 
 import hu.nemzsom.aoc.Solver
 
-import java.lang.Math.abs
+import java.lang.Math.{abs, random}
 import scala.annotation.tailrec
 
 object Day_7 extends App with Solver {
 
-  def fuelCost(positions: List[Int], targetPos: Int): Int =
-    positions.foldLeft(0)((cost, crabPos) => cost + abs(targetPos - crabPos))
+  def fuelCost(positions: List[Int], targetPos: Int)(costF: Int => Int): Int =
+    positions.foldLeft(0)((cost, crabPos) => cost + costF(abs(targetPos - crabPos)))
 
-  def fuelCost2(positions: List[Int], targetPos: Int): Int =
-    positions.foldLeft(0)((cost, crabPos) => cost + fuelBurn(crabPos, targetPos))
-
-  @tailrec
-  def fuelBurn(from: Int, to: Int, sumCost: Int = 0, stepCost: Int = 1): Int = {
-    if (from < to) fuelBurn(to, from, sumCost, stepCost)
-    else if (from == to) sumCost
-    else fuelBurn(from - 1, to, sumCost + stepCost, stepCost + 1)
-  }
-
-  def minFuelCost(positions: List[Int]): Int = {
-    Range.inclusive(positions.min, positions.max).map(targetPos => fuelCost(positions, targetPos)).min
-  }
-
-  def minFuelCost2(positions: List[Int]): Int = {
-    Range.inclusive(positions.min, positions.max).map(targetPos => fuelCost2(positions, targetPos)).min
-  }
+  def minFuelCost(positions: List[Int])(costF: Int => Int): Int =
+    Range.inclusive(positions.min, positions.max).map(targetPos => fuelCost(positions, targetPos)(costF)).min
 
   def parse(input: List[String]): List[Int] = input.head.split(",").map(_.toInt).toList
 
-  override def solve(input: List[String]) = minFuelCost(parse(input))
-  override def solveSecondPart(input: List[String]) = minFuelCost2(parse(input))
+  def flatCost(distance: Int): Int = distance
+  def increasingCost(distance: Int): Int = increasingCost(distance, 0)
+  @tailrec
+  def increasingCost(distance: Int, totalCost: Int): Int = distance match {
+    case 0 => totalCost
+    case _ => increasingCost(distance - 1, totalCost + distance)
+  }
+
+  override def solve(input: List[String]) = minFuelCost(parse(input))(flatCost)
+  override def solveSecondPart(input: List[String]) = minFuelCost(parse(input))(increasingCost)
   solve()
 }
