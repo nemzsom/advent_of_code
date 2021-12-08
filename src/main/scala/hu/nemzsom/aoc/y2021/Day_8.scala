@@ -4,28 +4,25 @@ import hu.nemzsom.aoc.Solver
 
 object Day_8 extends App with Solver {
 
-  case class Mapping(order: Array[Char], tenDigits: Array[Digit]) {
+  case class Mapping(tenDigits: Array[Digit]) {
     def matches(display: Display): Boolean = tenDigits.forall(display.patterns.contains)
-    def decode(display: Display): Option[Int] =
-    if (matches(display)) {
-      display.digits.map(digit => tenDigits.indexOf(digit)).toList match {
-        case x :: y :: z :: w :: Nil => Some(1000*x + 100*y + 10*z + w)
+    def decode(display: Display): Int = display.digits.map(digit => tenDigits.indexOf(digit)).toList match {
+        case x :: y :: z :: w :: Nil => 1000*x + 100*y + 10*z + w
       }
-    } else None
   }
   object Mapping {
-    def apply(order: Array[Char]): Mapping = Mapping(order, Array(
-      Digit(Set(0, 1, 2, 4, 5, 6).map(order)),    // 0
-      Digit(Set(2, 5).map(order)),                // 1
-      Digit(Set(0, 2, 3, 4, 6).map(order)),       // 2
-      Digit(Set(0, 2, 3, 5, 6).map(order)),       // 3
-      Digit(Set(1, 2, 3, 5).map(order)),          // 4
-      Digit(Set(0, 1, 3, 5, 6).map(order)),       // 5
-      Digit(Set(0, 1, 3, 4, 5, 6).map(order)),    // 6
-      Digit(Set(0, 2, 5).map(order)),             // 7
-      Digit(Set(0, 1, 2, 3, 4, 5, 6).map(order)), // 8
-      Digit(Set(0, 1, 2, 3, 5, 6).map(order))     // 9
-    ))
+    def apply(order: Array[Char]): Mapping = Mapping(Array(
+      Set(0, 1, 2, 4, 5, 6),    // 0
+      Set(2, 5),                // 1          0000
+      Set(0, 2, 3, 4, 6),       // 2         1    2
+      Set(0, 2, 3, 5, 6),       // 3         1    2
+      Set(1, 2, 3, 5),          // 4          3333
+      Set(0, 1, 3, 5, 6),       // 5         4    5
+      Set(0, 1, 3, 4, 5, 6),    // 6         4    5
+      Set(0, 2, 5),             // 7          6666
+      Set(0, 1, 2, 3, 4, 5, 6), // 8
+      Set(0, 1, 2, 3, 5, 6)     // 9
+    ).map(segments => Digit(segments.map(order))))
     val allPossible: List[Mapping] = Array('a', 'b', 'c', 'd', 'e', 'f', 'g').permutations
       .map(Mapping(_)).toList
   }
@@ -46,7 +43,7 @@ object Day_8 extends App with Solver {
   override def solveSecondPart(input: List[String]) = input.map(Display(_))
       .flatMap(display =>
         Mapping.allPossible.find(m => m.matches(display))
-          .flatMap(matched => matched.decode(display)))
+          .map(matched => matched.decode(display)))
       .sum
 
   solve()
