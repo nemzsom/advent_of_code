@@ -5,7 +5,6 @@ import hu.nemzsom.aoc.y2021.Day_11.Point.p
 
 import scala.annotation.tailrec
 
-
 object Day_11 extends App with Solver {
 
   case class Point(x: Int, y: Int) {
